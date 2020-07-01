@@ -1,0 +1,2 @@
+EMAIL_LOCAL_HOST_USER = 'epolozyukov@gmail.com'
+EMAIL_LOCAL_HOST_PASSWORD = 'Qq631875'
