@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'myblog', #project that i added
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -129,3 +130,5 @@ EMAIL_HOST_USER = EMAIL_LOCAL_HOST_USER
 EMAIL_HOST_PASSWORD = EMAIL_LOCAL_HOST_PASSWORD
 EMAIL_PORT = 587
 
+LOGIN_REDIRECT_URL = 'home' #redirection
+LOGOUT_REDIRECT_URL = 'home'
