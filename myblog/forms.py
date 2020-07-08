@@ -6,9 +6,10 @@ from myblog.models import User, Profile
 
 class UserSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=100, help_text='Required')
+    active = forms.BooleanField(required = False, initial=False)
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'active')
 
 #added for the profile
 class EditProfileForm(ModelForm):
@@ -22,4 +23,4 @@ class EditProfileForm(ModelForm):
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ('user', 'dob') #Note that we didn't mention user field here.
+        fields = ('user','middle_name', 'dob') #Note that we didn't mention user field here.
