@@ -15,6 +15,12 @@ from django.template.loader import render_to_string
 from .token_generator import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.shortcuts import redirect
+
+#profile
+from django.contrib.auth.decorators import login_required
+from myblog.forms import (EditProfileForm, ProfileForm)
+from myblog.models import User, Profile
 
 def usersignup(request):
     if request.method == 'POST':
@@ -23,6 +29,10 @@ def usersignup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+
+            # profile = Profile.objects.create(user=request.user)
+            # profile.save()
+
             current_site = get_current_site(request)
             email_subject = 'Activate Your Account'
             message = render_to_string('activate_account.html', {
@@ -38,6 +48,8 @@ def usersignup(request):
     else:
         form = UserSignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+    
 def activate_account(request, uidb64, token):
     try:
         uid = force_bytes(urlsafe_base64_decode(uidb64))
@@ -48,6 +60,31 @@ def activate_account(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return HttpResponse('Your account has been activate successfully')
+        return redirect('home')
     else:
         return HttpResponse('Activation link is invalid!')
+
+#for profile
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.userprofile)  # request.FILES is show the selected image or file
+
+        if form.is_valid() and profile_form.is_valid():
+            user_form = form.save()
+            custom_form = profile_form.save(False)
+            custom_form.user = user_form
+            custom_form.save()
+            return redirect('view_profile')###TODO view_profile
+    else:
+        form = EditProfileForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+        args = {}
+        # args.update(csrf(request))
+        args['form'] = form
+        args['profile_form'] = profile_form
+        return render(request, 'edit_profile.html', args) ###TODO
+
+def view_profile(request):
+    return render(request, 'view_profile.html')
