@@ -137,3 +137,5 @@ LOGOUT_REDIRECT_URL = 'home'
 #EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 from .settings_local import *
+EMAIL_HOST_USER = EMAIL_LOCAL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_LOCAL_HOST_PASSWORD

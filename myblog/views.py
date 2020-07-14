@@ -27,10 +27,8 @@ def usersignup(request):
         form = UserSignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            
-
-            # profile = Profile.objects.create(user=request.user)
-            # profile.save()
+            user.is_active = False
+            user.save()
 
             current_site = get_current_site(request)
             email_subject = 'Activate Your Account'
@@ -68,7 +66,7 @@ def activate_account(request, uidb64, token):
 def edit_profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.userprofile)  # request.FILES is show the selected image or file
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)  # request.FILES is show the selected image or file
 
         if form.is_valid() and profile_form.is_valid():
             user_form = form.save()
@@ -85,4 +83,7 @@ def edit_profile(request):
         args['profile_form'] = profile_form
         return render(request, 'edit_profile.html', args) ###TODO
 
+@login_required
+def view_profile(request):
+    return render(request, 'view_profile.html')
 

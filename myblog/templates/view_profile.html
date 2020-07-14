@@ -4,9 +4,13 @@
 <title>Hi Profile</title>
 {% endblock %}
 
-{% block body %}
+{% block content %}
 
   <li>Username: {{ user.username }}</li>
+  <li>Firstname: {{ user.firstname }}</li>
+
+  <p><a href="{% url 'edit_profile'%}">Edit Profile</a></p>
+  <p><a href="{% url 'home'%}">Back</a></p>
   
 
 {% endblock %}
