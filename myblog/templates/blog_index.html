@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-8 offset-md-2">
+    <h1>Blog Index</h1>
+    <hr>
+    {% for post in posts %}
+    <h2><a href="{% url 'blog_detail' post.pk%}">{{ post.title }}</a></h2>
+    <small>
+        {{ post.created_on.date }} |&nbsp;
+        
+    </small>
+    <p>{{ post.body | slice:":400" }}...</p>
+
+    <!-- rendering the comments info TODO  -->
+        <h3>Comments:</h3>
+        {% for comment in comments %}
+        <p>
+            On {{comment.created_on.date }}&nbsp;
+            <b>{{ comment.author }}</b>
+        </p>  
+        {% endfor %}
+
+    {% endfor %}
+</div>
+{% endblock %}

@@ -17,10 +17,13 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
 
+
 #profile
 from django.contrib.auth.decorators import login_required
 from myblog.forms import (EditProfileForm, ProfileForm)
-from myblog.models import User, Profile
+from myblog.models import User, Profile, Post, Comment
+from .forms import CommentForm
+
 
 def usersignup(request):
     if request.method == 'POST':
@@ -87,3 +90,33 @@ def edit_profile(request):
 def view_profile(request):
     return render(request, 'view_profile.html')
 
+#for the blog rendering
+def blog_index(request):
+    posts = Post.objects.all().order_by('-created_on') #The minus sign tells Django to start with the largest value rather than the smallest
+    context = {
+        "posts": posts,
+    }
+    return render(request, "blog_index.html", context)
+
+#to show a specific post with a comment associated with it
+def blog_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = Comment(
+                author=form.cleaned_data["author"],
+                body=form.cleaned_data["body"],
+                post=post
+            )
+            comment.save()
+
+    comments = Comment.objects.filter(post=post)
+    context = {
+        "post": post,
+        "comments": comments,
+        "form": form,
+    }
+    return render(request, "blog_detail.html", context)
